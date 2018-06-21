@@ -1,0 +1,44 @@
+##ignore this file##
+target/ 
+.classpath
+.project
+.settings      
+.springBeans
+.tern-project
+.metadata/
+.externalToolBuilders/
+Servers/
+ ##filter databfile��sln file##
+*.mdb  
+*.ldb  
+*.sln    
+##class file##
+*.com  
+*.class  
+*.dll  
+#*.exe  
+*.o  
+*.so  
+# compression file
+*.7z  
+*.dmg  
+*.gz  
+*.iso  
+#*.jar  
+*.rar  
+*.tar  
+#*.zip  
+*.via
+*.tmp
+*.err 
+# OS generated files #  
+.DS_Store  
+.DS_Store?  
+._*  
+.Spotlight-V100  
+.Trashes  
+#Icon?  
+ehthumbs.db  
+Thumbs.db
+common/.externalToolBuilders/org.eclipse.wst.common.project.facet.core.builder.launch
+common/.externalToolBuilders/org.eclipse.wst.validation.validationbuilder.launch
