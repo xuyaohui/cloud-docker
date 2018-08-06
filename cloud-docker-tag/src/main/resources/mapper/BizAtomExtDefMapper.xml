@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teradata.tag.repository.AtomOpenService">
+
+    <resultMap id="segBizAtomExtDef-result-nogroup" type="com.teradata.tag.bean.BizAtomExtDef">
+        <result property="bizAtomId" column="BIZ_ATOM_ID" />
+        <result property="bizAtomName" column="BIZ_ATOM_NAME" />
+    </resultMap>
+
+
+    <select id="getExtAtomsByAtomId" resultMap="segBizAtomExtDef-result-nogroup">
+		<![CDATA[
+			SELECT TOP 100000 A.BIZ_ATOM_ID  (NAMED "BIZ_ATOM_ID",TITLE '标签编号')
+				       ,A.BIZ_ATOM_NAME  (NAMED "BIZ_ATOM_NAME",TITLE '标签名称')
+				FROM SEG_BIZ_ATOM_DEF A
+				LEFT JOIN SEG_BIZ_ATOM_EXT_DEF B
+				ON A.BIZ_ATOM_ID=B.BIZ_ATOM_ID
+				INNER   JOIN
+				             (
+				                SELECT BIZ_ATOM_ID
+					            FROM SEG_BIZ_ATOM_AUTH
+					            WHERE (VISIBLE_CRITERIA=1 OR VISIBLE_RESULT=1)
+					            AND     (ROLE_ID <>1)
+					            GROUP BY 1
+				             ) C
+				ON        A.BIZ_ATOM_ID = C.BIZ_ATOM_ID
+				LEFT JOIN SEG_TABLE_INFO C1
+				ON        A.TABLE_ID=C1.TABLE_ID
+				LEFT     JOIN
+				            (
+				                SELECT
+				   					    (CASE WHEN LEVEL6_NAME IS NOT NULL THEN COALESCE(LEVEL6_NAME,'')||'-'||COALESCE(LEVEL5_NAME,'')||'-'||COALESCE(LEVEL4_NAME,'')||'-'||COALESCE(LEVEL3_NAME,'')||'-'||COALESCE(LEVEL2_NAME,'')||'-'||COALESCE(LEVEL1_NAME,'')
+									    	  WHEN LEVEL5_NAME IS NOT NULL THEN COALESCE(LEVEL5_NAME,'')||'-'||COALESCE(LEVEL4_NAME,'')||'-'||COALESCE(LEVEL3_NAME,'')||'-'||COALESCE(LEVEL2_NAME,'')||'-'||COALESCE(LEVEL1_NAME,'')
+									    	  WHEN LEVEL4_NAME IS NOT NULL THEN COALESCE(LEVEL4_NAME,'')||'-'||COALESCE(LEVEL3_NAME,'')||'-'||COALESCE(LEVEL2_NAME,'')||'-'||COALESCE(LEVEL1_NAME,'')
+				        			    	  WHEN  LEVEL3_NAME IS NOT NULL THEN COALESCE(LEVEL3_NAME,'')||'-'||COALESCE(LEVEL2_NAME,'')||'-'||COALESCE(LEVEL1_NAME,'')
+				        			    	  WHEN LEVEL2_NAME IS NOT NULL THEN  COALESCE(LEVEL2_NAME,'')||'-'||COALESCE(LEVEL1_NAME,'')
+											  ELSE COALESCE(LEVEL1_NAME,'')
+				                      END) AS LEVEL_NAME
+				   										,A.BIZ_ATOM_ID
+				   										,COALESCE(A.ATOM_GROUP_ID,-1) AS LEVEL1_ID, B.ATOM_GROUP_NAME AS LEVEL1_NAME
+				   										,COALESCE(B.PAR_ATOM_GROUP_ID,-1)  AS LEVEL2_ID, C.ATOM_GROUP_NAME AS LEVEL2_NAME
+				   										,COALESCE(C.PAR_ATOM_GROUP_ID,-1)  AS LEVEL3_ID, D.ATOM_GROUP_NAME AS LEVEL3_NAME
+				   										,COALESCE(D.PAR_ATOM_GROUP_ID,-1)  AS LEVEL4_ID, E.ATOM_GROUP_NAME AS LEVEL4_NAME
+				   										,COALESCE(E.PAR_ATOM_GROUP_ID,-1)  AS LEVEL5_ID, F.ATOM_GROUP_NAME AS LEVEL5_NAME
+														,COALESCE(F.PAR_ATOM_GROUP_ID,-1)  AS LEVEL6_ID, G.ATOM_GROUP_NAME AS LEVEL6_NAME
+												FROM    SEG_ATOM_GROUP_REL A
+												LEFT  	JOIN
+																		SEG_BIZ_GROUP_DEF B
+												ON    A.ATOM_GROUP_ID = B.ATOM_GROUP_ID
+												LEFT    JOIN
+												            SEG_BIZ_GROUP_DEF C
+												ON    B.PAR_ATOM_GROUP_ID = C.ATOM_GROUP_ID
+												LEFT    JOIN
+												            SEG_BIZ_GROUP_DEF D
+												ON    C.PAR_ATOM_GROUP_ID = D.ATOM_GROUP_ID
+												LEFT    JOIN
+												     SEG_BIZ_GROUP_DEF E
+												ON    D.PAR_ATOM_GROUP_ID = E.ATOM_GROUP_ID
+												LEFT    JOIN
+												            SEG_BIZ_GROUP_DEF F
+												ON    E.PAR_ATOM_GROUP_ID = F.ATOM_GROUP_ID
+												LEFT    JOIN
+												            SEG_BIZ_GROUP_DEF G
+												ON    F.PAR_ATOM_GROUP_ID = G.ATOM_GROUP_ID
+												LEFT    JOIN
+												            SEG_BIZ_GROUP_EXT H
+												ON    A.ATOM_GROUP_ID=H.ATOM_GROUP_ID
+												WHERE  H.FLAG_ID='1'
+				              )  D
+				ON         A.BIZ_ATOM_ID = D.BIZ_ATOM_ID
+				LEFT JOIN SYS_USER E
+				ON CAST(A.USER_ID AS VARCHAR(30))=E.USER_ID
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='BIZ_ATOM_SOURCE'
+						     )F
+				ON CAST(B.BIZ_ATOM_SOURCE AS VARCHAR(30))=F.DMN_COL_VAL
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='Biz_Atom_Ana_Property'
+						     )G
+				ON CAST(A.Biz_Atom_Ana_Property AS VARCHAR(30))=G.DMN_COL_VAL
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='BIZ_ATOM_TYPE'
+						     )H
+				ON CAST(B.BIZ_ATOM_TYPE AS VARCHAR(30))=H.DMN_COL_VAL
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='Sensitive_Flag'
+						     )I
+				ON CAST(A.Sensitive_Flag AS VARCHAR(30))=I.DMN_COL_VAL
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='IS_PUBLIC'
+						     )J
+				ON CAST(A.IS_PUBLIC AS VARCHAR(30))=J.DMN_COL_VAL
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='IS_NET_FLAG'
+						     )K
+				ON CAST(B.IS_NET_FLAG AS VARCHAR(30))=K.DMN_COL_VAL
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='TABLE_TYPE'
+						     )L
+				ON  CAST(C1.TABLE_TYPE AS VARCHAR(30))=L.DMN_COL_VAL
+				LEFT JOIN SYS_DEPART M
+				ON E.DEPART_ID=M.DEPART_ID
+				LEFT    JOIN
+				            (
+							 SELECT DMN_COL_VAL_NAME,DMN_COL_VAL
+							 FROM CDE_ATOM_EXT_DEF
+							 WHERE DMN_COL_NAME='BIZ_ATOM_STA'
+						     )P
+				ON  CAST(B.BIZ_ATOM_STA AS VARCHAR(30))=P.DMN_COL_VAL
+				WHERE D.LEVEL_NAME IS NOT NULL
+				AND   A.BIZ_ATOM_STATUS='0'
+				AND A.BIZ_ATOM_ID NOT IN (15000,15001,15002,15003,15004,15005)
+	  		]]>
+
+	</select>
+
+</mapper>

@@ -18,12 +18,10 @@
 
     <modules>
         <module>cloud-docker-eureka</module>
-        <module>cloud-docker-kafka</module>
         <module>cloud-docker-zuul</module>
         <module>cloud-docker-config</module>
-        <module>cloud-docker-service1</module>
-        <module>cloud-docker-service2</module>
-        <module>cloud-docker-ui</module>
+        <module>cloud-zipkin</module>
+        <module>cloud-docker-app</module>
         <module>common</module>
     </modules>
 
@@ -32,7 +30,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <cloud.eureka.version>1.3.0.RELEASE</cloud.eureka.version>
-        <cloud.kafka.varsion>1.3.0.RELEASE</cloud.kafka.varsion>
+        <cloud.zuul.version>1.3.0.RELEASE</cloud.zuul.version>
         <skipTests>true</skipTests>
         <docker.image.prefix>yaohui</docker.image.prefix>
     </properties>
@@ -48,11 +46,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-stream-binder-kafka</artifactId>
-                <version>${cloud.kafka.varsion}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -64,33 +57,33 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-zuul</artifactId>
-                <version>${cloud.kafka.varsion}</version>
+                <!--<version>${cloud.kafka.varsion}</version>-->
             </dependency>
 
             <!--服务调用-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-feign</artifactId>
-                <version>${cloud.kafka.varsion}</version>
+                <!--<version>${cloud.kafka.varsion}</version>-->
             </dependency>
 
             <!--熔断机制-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-hystrix</artifactId>
-                <version>${cloud.kafka.varsion}</version>
+                <!--<version>${cloud.kafka.varsion}</version>-->
             </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
-                <version>${cloud.kafka.varsion}</version>
+                <!--<version>${cloud.kafka.varsion}</version>-->
             </dependency>
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>
-                <version>${cloud.kafka.varsion}</version>
+                <!--<version>${cloud.kafka.varsion}</version>-->
             </dependency>
 
             <dependency>
@@ -98,6 +91,37 @@
                 <artifactId>servo-core</artifactId>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+            </dependency>
+
+            <!--Teradata数据库连接jar-->
+            <dependency>
+                <groupId>com.teradata</groupId>
+                <artifactId>terajdbc4</artifactId>
+                <version>13.10.0.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.teradata</groupId>
+                <artifactId>tdgssconfig</artifactId>
+                <version>13.10.0.1</version>
+            </dependency>
+
+
+            <!--数据库连接池-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.0.29</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>1.1.1</version>
+            </dependency>
 
         </dependencies>
 

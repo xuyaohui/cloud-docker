@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teradata.tag.repository.UserRepository">
+
+    <resultMap id="sysUser-result" type="com.teradata.tag.bean.SysUserVO">
+        <result property="userId" column="USER_ID" />
+        <result property="latnId" column="LATN_ID" />
+        <result property="latnCd" column="Latn_Cd" />
+        <result property="grpLatnId" column="GRP_LATN_ID" />
+        <result property="grpMemLatnId" column="GRP_MEM_LATN_ID" />
+        <result property="userName" column="USER_NAME" />
+        <result property="userPass" column="USER_PASS" />
+        <result property="departId" column="DEPART_ID" />
+        <result property="departName" column="DEPART_NAME" />
+        <result property="teamId" column="TEAM_ID" />
+        <result property="userRole" column="USER_ROLE" />
+        <result property="roleName" column="ROLE_NAME" />
+        <result property="userStatus" column="USER_STATUS" />
+        <result property="lastLoginTime" column="LAST_LOGIN_TIME" />
+        <result property="creatorName" column="CREATOR_NAME" />
+        <result property="createTime" column="CREATE_TIME" />
+        <result property="nickName" column="NICK_NAME" />
+        <result property="userIp" column="USER_IP" />
+        <result property="userEmail" column="USER_EMAIL" />
+        <result property="userPhone" column="USER_PHONE" />
+        <result property="queryRights" column="QUERY_RIGHT" />
+        <result property="dataRight" column="DATA_RIGHT" />
+        <result property="lastModifyPswTime" column="LAST_MODIFY_PSW_TIME" />
+        <result property="continuousLoginFailCnt" column="CONTINUOUS_LOGIN_FAIL_CNT" />
+    </resultMap>
+
+    <select id="getUserByUserId" resultMap="sysUser-result" parameterType="java.util.HashMap">
+        SELECT
+					 T1.USER_ID				AS USER_ID
+					,T1.LATN_ID				AS LATN_ID
+					,T1.GRP_LATN_ID		    AS GRP_LATN_ID
+					,T1.GRP_MEM_LATN_ID     AS GRP_MEM_LATN_ID
+					,T1.USER_NAME			AS USER_NAME
+					,T1.USER_PASS			AS USER_PASS
+					,T1.DEPART_ID AS DEPART_ID
+					,ZEROIFNULL(T1.TEAM_ID)	  AS TEAM_ID
+					,T1.USER_ROLE			AS USER_ROLE
+                    ,T4.ROLE_NAME           AS ROLE_NAME
+					,T1.USER_STATUS			AS USER_STATUS
+					,T1.LAST_LOGIN_TIME		AS LAST_LOGIN_TIME
+					,T1.CREATOR_NAME		AS CREATOR_NAME
+					,T1.CREATE_TIME			AS CREATE_TIME
+					,T1.NICK_NAME			AS NICK_NAME
+					,T1.USER_IP				AS USER_IP
+					,T1.USER_EMAIL			AS USER_EMAIL
+					,T1.USER_PHONE			AS USER_PHONE
+					,T1.QUERY_RIGHT			AS QUERY_RIGHT
+					,T1.DATA_RIGHT          AS DATA_RIGHT
+					,T1.LAST_MODIFY_PSW_TIME AS LAST_MODIFY_PSW_TIME
+					,T1.CONTINUOUS_LOGIN_FAIL_CNT AS CONTINUOUS_LOGIN_FAIL_CNT
+					,T2.LATN_CD             AS LATN_CD
+					,T3.DEPART_NAME 		AS DEPART_NAME
+			FROM	SYS_USER T1
+			LEFT JOIN	SYS_LOC_LATN T2
+				   ON	T1.LATN_ID=T2.LATN_ID
+			LEFT JOIN   SYS_DEPART T3
+			       ON  	T1.DEPART_ID = T3.DEPART_ID
+            LEFT JOIN   SYS_ROLE T4
+                   ON   T1.USER_ROLE = T4.ROLE_ID
+            WHERE 1=1
+                AND T1.USER_ID like '%'|| #{userId}||'%'
+
+    </select>
+
+    <select id="getUserByUserIdAndPassWd" resultMap="sysUser-result" parameterType="java.util.HashMap">
+        SELECT
+        T1.USER_ID				AS USER_ID
+        ,T1.LATN_ID				AS LATN_ID
+        ,T1.GRP_LATN_ID		    AS GRP_LATN_ID
+        ,T1.GRP_MEM_LATN_ID     AS GRP_MEM_LATN_ID
+        ,T1.USER_NAME			AS USER_NAME
+        ,T1.USER_PASS			AS USER_PASS
+        ,T1.DEPART_ID AS DEPART_ID
+        ,ZEROIFNULL(T1.TEAM_ID)	  AS TEAM_ID
+        ,T1.USER_ROLE			AS USER_ROLE
+        ,T1.USER_STATUS			AS USER_STATUS
+        ,T1.LAST_LOGIN_TIME		AS LAST_LOGIN_TIME
+        ,T1.CREATOR_NAME		AS CREATOR_NAME
+        ,T1.CREATE_TIME			AS CREATE_TIME
+        ,T1.NICK_NAME			AS NICK_NAME
+        ,T1.USER_IP				AS USER_IP
+        ,T1.USER_EMAIL			AS USER_EMAIL
+        ,T1.USER_PHONE			AS USER_PHONE
+        ,T1.QUERY_RIGHT			AS QUERY_RIGHT
+        ,T1.DATA_RIGHT          AS DATA_RIGHT
+        ,T1.LAST_MODIFY_PSW_TIME AS LAST_MODIFY_PSW_TIME
+        ,T1.CONTINUOUS_LOGIN_FAIL_CNT AS CONTINUOUS_LOGIN_FAIL_CNT
+        ,T2.LATN_CD             AS LATN_CD
+        ,T3.DEPART_NAME 		AS DEPART_NAME
+        FROM	SYS_USER T1
+        LEFT JOIN	SYS_LOC_LATN T2
+        ON	T1.LATN_ID=T2.LATN_ID
+        LEFT JOIN SYS_DEPART T3
+        ON  	T1.DEPART_ID = T3.DEPART_ID
+        WHERE 1=1
+        AND T1.USER_ID=#{userId}
+        AND T1.USER_PASS=#{userPass}
+    </select>
+
+
+    <select id="getCountByuserIdAndDepartName" resultType="int" parameterType="java.util.HashMap">
+        SELECT COUNT(*)
+          FROM  SYS_USER
+        WHERE 1=1
+        <if test="userId !=''">
+            AND USER_ID like '%'|| #{userId}||'%'
+        </if>
+    </select>
+
+</mapper>

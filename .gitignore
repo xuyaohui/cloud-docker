@@ -42,3 +42,10 @@ ehthumbs.db
 Thumbs.db
 common/.externalToolBuilders/org.eclipse.wst.common.project.facet.core.builder.launch
 common/.externalToolBuilders/org.eclipse.wst.validation.validationbuilder.launch
+.idea/
+.iml
+*.iml
+cloud-docker-shiro/mvnw
+cloud-docker-shiro/mvnw.cmd
+cloud-docker-shiro/.mvn/wrapper/maven-wrapper.jar
+cloud-docker-shiro/.mvn/

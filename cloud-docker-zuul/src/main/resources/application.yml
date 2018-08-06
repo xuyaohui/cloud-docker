@@ -10,8 +10,8 @@ spring:
 zuul:
   routes:
     api-a:
-      path: /api-a/**
-      serviceId: cloud-service1
+      path: /api-tag/**
+      serviceId: tag-client
     api-b:
       path: /api-b/**
       serviceId: cloud-service1
