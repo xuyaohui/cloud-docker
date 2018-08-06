@@ -1,4 +1,4 @@
-package com.teradata.zuul.config;
+package com.teradata.starter.config;
 
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -59,7 +59,6 @@ public class ShiroConfig {
         filterRuleMap.put("/**", "jwt");
         // 访问401和404页面不通过我们的Filter
         filterRuleMap.put("/401", "anon");
-        filterRuleMap.put("/testFeign","anon");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }

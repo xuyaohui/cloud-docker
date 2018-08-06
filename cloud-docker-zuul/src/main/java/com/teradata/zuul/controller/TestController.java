@@ -2,6 +2,7 @@ package com.teradata.zuul.controller;
 
 import com.teradata.zuul.bean.ResponseBean;
 import com.teradata.zuul.bean.UserBean;
+import com.teradata.zuul.feign.TestFeign;
 import com.teradata.zuul.repository.UserService;
 import com.teradata.zuul.utils.JWTUtil;
 import org.apache.shiro.authz.annotation.Logical;
@@ -18,6 +19,14 @@ public class TestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TestFeign testFeign;
+
+    @GetMapping("/testFeign")
+    public String testFeign(){
+        return testFeign.getLoginToken();
+    }
 
 
     @GetMapping("/401")

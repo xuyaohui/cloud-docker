@@ -33,6 +33,7 @@
         <cloud.zuul.version>1.3.0.RELEASE</cloud.zuul.version>
         <skipTests>true</skipTests>
         <docker.image.prefix>yaohui</docker.image.prefix>
+        <lombok.version>1.16.18</lombok.version>
     </properties>
         <dependencies>
             <dependency>
@@ -46,6 +47,11 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
