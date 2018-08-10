@@ -1,7 +1,6 @@
 package com.teradata.tag.controller;
 
-import com.netflix.discovery.converters.Auto;
-import com.teradata.tag.bean.BizAtomExtDef;
+import com.teradata.tag.annotation.MyRequireRole;
 import com.teradata.tag.bean.SysUserVO;
 import com.teradata.tag.repository.AtomOpenService;
 import com.teradata.tag.repository.UserRepository;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xuyaohui
@@ -26,6 +24,12 @@ public class AtomOpenController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/401")
+    public String error401(){
+        return "未登录";
+    }
+
+    @MyRequireRole("test")
     @GetMapping("/getAtomDetil")
     public String getAtomDetil(){
 

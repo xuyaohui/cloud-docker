@@ -3,6 +3,8 @@ package com.teradata.starter.controller;
 import com.teradata.starter.bean.UserBean;
 import com.teradata.starter.repository.UserService;
 import com.teradata.starter.utils.JWTUtil;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,12 @@ public class TestController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 需要登录验证
+     * @return
+     */
     @GetMapping("/test")
+    @RequiresAuthentication
     public String test(){
         return "success";
     }
@@ -32,7 +39,7 @@ public class TestController {
     }
 
     @GetMapping("/getUser")
-    //@RequiresAuthentication
+    @RequiresRoles("")
     public String testGetUser(){
 
         String userName= "idaadmin";

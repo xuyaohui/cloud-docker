@@ -6,10 +6,14 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author xuyaohui
+ * @date 2018-8-6
+ */
+
 @Component
 public class FirstFilter extends ZuulFilter {
 
-    private final String TOKEN = "xuyaohui";
     @Override
     public String filterType() {
         return "pre";
@@ -31,7 +35,7 @@ public class FirstFilter extends ZuulFilter {
 //        RequestContext ctx = RequestContext.getCurrentContext();
 //        HttpServletRequest request = ctx.getRequest();
 //        String accessToken = String.valueOf(request.getParameter("Token"));
-//        if(!TOKEN.equals(accessToken)) {
+//        if(!"xuyaohui".equals(accessToken)) {
 //            ctx.setSendZuulResponse(false);
 //            ctx.setResponseStatusCode(401);
 //            return null;
