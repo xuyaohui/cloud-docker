@@ -1,5 +1,6 @@
 package com.teradata.tag.aop;
 
+import com.teradata.common.util.JWTUtil;
 import com.teradata.tag.annotation.MyRequireRole;
 import com.teradata.tag.feign.LoginFeign;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -42,27 +43,41 @@ public class MyRequireRoleAop {
     }
 
     @Around(value = "checkRole()&&@annotation(myRequireRole)")
-    public void run(ProceedingJoinPoint pjp, MyRequireRole myRequireRole){
-        //可以做权限认证
-        String isLogin = loginFeign.isLogin();
-        if ("success".equalsIgnoreCase(isLogin)){
-            logger.info("认证通过...");
-            try {
-                pjp.proceed();
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
+    public Object  run(ProceedingJoinPoint pjp, MyRequireRole myRequireRole){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String authorization = request.getHeader("Authorization");
+        if (authorization != null && authorization != ""){
+            boolean flag = JWTUtil.verifyToken(authorization.trim());
+            if (flag){
+                try {
+                    Object o = pjp.proceed();
+                    return  o;
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }else{
+                HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+                try {
+                    response.sendRedirect("/401");
+                    return null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+
+                }
             }
         }else{
             logger.info("认证未通过...");
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
             try {
                 response.sendRedirect("/401");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return null;
         }
 
+        return null;
     }
 
     @After(value = "checkRole()&&@annotation(myRequireRole)")

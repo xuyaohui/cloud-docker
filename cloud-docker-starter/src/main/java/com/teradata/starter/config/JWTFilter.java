@@ -1,5 +1,6 @@
 package com.teradata.starter.config;
 
+import com.teradata.common.bean.JWTToken;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,15 +16,27 @@ import java.io.IOException;
  */
 
 @Component
-@RabbitListener(queues = "hello1")
 public class ReceiverMq {
 
     private static final Logger log = LoggerFactory.getLogger(ReceiverMq.class);
 
 
-    @RabbitHandler
+    @RabbitListener(queues = {"hello1"})
     public void process(String hello) {
         System.out.println("Receiver  : " + hello);
 
+    }
+
+    /**
+     * DIRECT模式.
+     *
+     * @param message the message
+     * @param channel the channel
+     * @throws IOException the io exception  这里异常需要处理
+     */
+    @RabbitListener(queues = {"DIRECT_QUEUE"})
+    public void message(Message message, Channel channel) throws IOException {
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+        log.debug("DIRECT "+new String (message.getBody()));
     }
 }

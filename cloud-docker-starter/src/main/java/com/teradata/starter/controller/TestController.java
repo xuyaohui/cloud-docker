@@ -1,8 +1,8 @@
 package com.teradata.starter.controller;
 
+import com.teradata.common.util.JWTUtil;
 import com.teradata.starter.bean.UserBean;
 import com.teradata.starter.repository.UserService;
-import com.teradata.starter.utils.JWTUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class TestController {
 
     @RequestMapping("/login")
     public String login(){
-        return JWTUtil.sign("idaadmin", "dn1rjz8Hzuo=");
+        return JWTUtil.sign("idaadmin");
     }
 
     @GetMapping("/getUser")

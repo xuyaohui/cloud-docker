@@ -1,8 +1,9 @@
 package com.teradata.starter.config;
 
+import com.teradata.common.bean.JWTToken;
+import com.teradata.common.util.JWTUtil;
 import com.teradata.starter.bean.UserBean;
 import com.teradata.starter.repository.UserService;
-import com.teradata.starter.utils.JWTUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationException;
@@ -71,7 +72,7 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthenticationException("User didn't existed!");
         }
 
-        if (! JWTUtil.verify(token, username, userBean.getPassword())) {
+        if (! JWTUtil.verify(token, username)) {
             throw new AuthenticationException("Username or password error");
         }
 
