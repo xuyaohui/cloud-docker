@@ -51,6 +51,13 @@
             <artifactId>java-jwt</artifactId>
             <version>3.2.0</version>
         </dependency>
+
+        <!--添加链路追踪-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

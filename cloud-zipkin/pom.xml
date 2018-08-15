@@ -18,7 +18,8 @@
     </parent>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/io.zipkin.java/zipkin-server -->
+
+
         <dependency>
             <groupId>io.zipkin.java</groupId>
             <artifactId>zipkin-server</artifactId>
@@ -26,7 +27,6 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/io.zipkin.java/zipkin-autoconfigure-ui -->
         <dependency>
             <groupId>io.zipkin.java</groupId>
             <artifactId>zipkin-autoconfigure-ui</artifactId>

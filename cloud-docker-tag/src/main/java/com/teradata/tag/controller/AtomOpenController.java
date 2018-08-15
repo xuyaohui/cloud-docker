@@ -2,10 +2,12 @@ package com.teradata.tag.controller;
 
 import com.teradata.tag.annotation.MyRequireRole;
 import com.teradata.tag.bean.SysUserVO;
+import com.teradata.tag.feign.LoginFeign;
 import com.teradata.tag.repository.AtomOpenService;
 import com.teradata.tag.repository.UserRepository;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +30,21 @@ public class AtomOpenController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LoginFeign loginFeign;
+
+    @Value("${name}")
+    String name;
+
     @GetMapping("/401")
     public String error401(){
         return "未登录";
+    }
+
+
+    @GetMapping("/getToken")
+    public String getToken(){
+        return name+" 获得的Token： "+loginFeign.getToken();
     }
 
     @MyRequireRole("test")

@@ -9,9 +9,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @date 2018/8/6 0006 下午 4:31
  */
 
-@FeignClient("cloud-shiro")
+@FeignClient(name = "cloud-shiro",fallback = LoginFeignError.class)
 public interface LoginFeign {
 
     @RequestMapping(value = "/test",method = RequestMethod.GET)
     String isLogin();
+
+    /**
+     * 从校验中心获取Token
+     * @return
+     */
+    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    String getToken();
 }

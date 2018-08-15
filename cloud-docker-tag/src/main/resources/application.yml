@@ -4,3 +4,11 @@ spring:
       port: 5672
       username: guest
       password: guest
+hystrix:
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 5000
+
