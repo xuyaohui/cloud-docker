@@ -1,5 +1,6 @@
 package com.teradata.tag.controller;
 
+import com.teradata.common.util.JWTUtil;
 import com.teradata.tag.annotation.MyRequireRole;
 import com.teradata.tag.bean.SysUserVO;
 import com.teradata.tag.feign.LoginFeign;
@@ -41,7 +42,11 @@ public class AtomOpenController {
         return "未登录";
     }
 
-
+    @GetMapping("/getRoles")
+    public String getRolesByToken(String token){
+        return JWTUtil.getRolesByToken(token);
+    }
+    @MyRequireRole("test")
     @GetMapping("/getToken")
     public String getToken(){
         return name+" 获得的Token： "+loginFeign.getToken();

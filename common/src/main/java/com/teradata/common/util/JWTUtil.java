@@ -51,6 +51,21 @@ public class JWTUtil {
     }
 
     /**
+     * 通过Token解析出roles
+     * @param token
+     * @return
+     */
+    public static String getRolesByToken(String token){
+        try {
+            DecodedJWT jwt =JWT.decode(token);
+            return jwt.getClaim("roles").asString();
+        }catch (JWTDecodeException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 生成签名,5min后过期
      * @param username 用户名
      * @return 加密的token
@@ -62,6 +77,7 @@ public class JWTUtil {
             // 附带username信息
             return JWT.create()
                     .withClaim("username", username)
+                    .withClaim("roles","SELECT,DROP,DELETE")
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
