@@ -153,6 +153,15 @@
                 <version>3.2.0</version>
             </dependency>
 
+
+            <!--用于elk,日志收集-->
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>4.11</version>
+            </dependency>
+
+
         </dependencies>
 
     <dependencyManagement>
