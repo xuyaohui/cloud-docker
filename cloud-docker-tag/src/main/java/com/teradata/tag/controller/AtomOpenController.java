@@ -46,13 +46,13 @@ public class AtomOpenController {
     public String getRolesByToken(String token){
         return JWTUtil.getRolesByToken(token);
     }
-    @MyRequireRole("test")
+
     @GetMapping("/getToken")
     public String getToken(){
         return name+" 获得的Token： "+loginFeign.getToken();
     }
 
-    @MyRequireRole("test")
+    //@MyRequireRole("test")
     @GetMapping("/getAtomDetil")
     public String getAtomDetil(){
 
