@@ -1,5 +1,6 @@
 package com.teradata.tag.controller;
 
+import com.teradata.tag.mq.HelloSender;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import org.springframework.amqp.rabbit.support.CorrelationData;
@@ -25,11 +26,15 @@ public class MqController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private HelloSender helloSender;
+
 
 
     @RequestMapping("/direct")
     public String direct(String p) {
-        rabbitTemplate.convertAndSend("hello1","test");
+        //rabbitTemplate.convertAndSend("hello1","test");
+        helloSender.send();
         return "success";
     }
 
@@ -37,9 +42,14 @@ public class MqController {
     @RequestMapping("/directAck")
     public String directAck(String p) {
         System.out.println("接收： "+UUID.randomUUID().toString());
-        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        try{
+            CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
 
-        rabbitTemplate.convertAndSend("DIRECT_EXCHANGE", "DIRECT_ROUTING_KEY", p, correlationData);
-        return "send success";
+            rabbitTemplate.convertAndSend("DIRECT_EXCHANGE", "DIRECT_ROUTING_KEY", p, correlationData);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+      return "send success";
     }
 }

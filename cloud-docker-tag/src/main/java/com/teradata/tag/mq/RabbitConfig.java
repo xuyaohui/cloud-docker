@@ -20,70 +20,35 @@ import javax.annotation.Resource;
 @Configuration
 public class RabbitConfig {
 
-    @Resource
-    private RabbitTemplate rabbitTemplate;
-
     @Bean
-    public Queue Queue() {
-        return new Queue("hello1");
+    public Queue QueueA() {
+        return new Queue("hello");
     }
 
     @Bean
-    public AmqpTemplate amqpTemplate() {
-        Logger log = LoggerFactory.getLogger(RabbitTemplate.class);
-
-        // 使用jackson 消息转换器
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
-        rabbitTemplate.setEncoding("UTF-8");
-
-        //开启returncallback     yml 需要 配置    publisher-returns: true
-        rabbitTemplate.setMandatory(true);
-        rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
-            String correlationId = message.getMessageProperties().getCorrelationIdString();
-            log.debug("消息：{} 发送失败, 应答码：{} 原因：{} 交换机: {}  路由键: {}", correlationId, replyCode, replyText, exchange, routingKey);
-        });
-
-        //消息确认  yml 需要配置   publisher-returns: true
-        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-            if (ack) {
-                log.debug("消息发送到exchange成功,id: {}", correlationData.getId());
-            } else {
-                log.debug("消息发送到exchange失败,原因: {}", cause);
-            }
-        });
-        return rabbitTemplate;
+    public Queue QueueB() {
+        return new Queue("helloObj");
     }
 
     /**
-     * 声明Direct交换机 支持持久化.
-     *
-     * @return the exchange
-     */
-    @Bean("directExchange")
-    public Exchange directExchange() {
-        return ExchangeBuilder.directExchange("DIRECT_EXCHANGE").durable(true).build();
-    }
-
-    /**
-     * 声明一个队列 支持持久化.
-     *
-     * @return the queue
-     */
-    @Bean("directQueue")
-    public Queue directQueue() {
-        return QueueBuilder.durable("DIRECT_QUEUE").build();
-    }
-
-    /**
-     * 通过绑定键 将指定队列绑定到一个指定的交换机 .
-     *
-     * @param queue    the queue
-     * @param exchange the exchange
-     * @return the binding
+     * Fanout 就是我们熟悉的广播模式或者订阅模式，给Fanout交换机发送消息，绑定了这个交换机的所有队列都收到这个消息。
+     * @return
      */
     @Bean
-    public Binding directBinding(@Qualifier("directQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("DIRECT_ROUTING_KEY").noargs();
+    FanoutExchange fanoutExchange() {
+        return new FanoutExchange("ABExchange");
     }
+
+
+    @Bean
+    Binding bindingExchangeA(Queue QueueA, FanoutExchange fanoutExchange) {
+        return BindingBuilder.bind(QueueA).to(fanoutExchange);
+    }
+
+    @Bean
+    Binding bindingExchangeB(Queue QueueB, FanoutExchange fanoutExchange) {
+        return BindingBuilder.bind(QueueB).to(fanoutExchange);
+    }
+
 
 }
